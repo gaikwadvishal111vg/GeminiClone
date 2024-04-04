@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gemini Clone</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section>
+      <div class="sidebar">
+        <div class="top">
+          <img class="menu" src="./icons/menu_icon.png" alt="" />
+          <div class="new-chat">
+            <img src="./icons/plus_icon.png" alt="" />
+          </div>
+          <div class="recent">
+            <p class="recent-title">Recent</p>
+            <div class="recent-entry">
+              <img src="./icons/message_icon.png" alt="" />
+              <p>What is react...</p>
+            </div>
+          </div>
+        </div>
+        <div class="bottom">
+          <div class="bottom-item recent-entry">
+            <img src="./icons/question_icon.png" alt="" />
+          </div>
+          <div class="bottom-item recent-entry">
+            <img src="./icons/history_icon.png" alt="" />
+          </div>
+          <div class="bottom-item recent-entry">
+            <img src="./icons/setting_icon.png" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <!-- // CENTER PART -->
+
+      <div class="main">
+        <div class="nav">
+          <p>Gemini</p>
+          <img src="./icons/user_icon.png" />
+        </div>
+        <div class="main-container">
+          <!-- <div class="check"> -->
+          <!-- <div class="greet">
+              <p>
+                <span>Hello,Vishal.</span>
+              </p>
+              <p>How can I Help You Today?</p>
+            </div> -->
+          <div class="cards">
+            <div class="card">
+              <p>We will ask you some JavaScript Quetions</p>
+              <img src="icons/compass_icon.png" alt="" />
+            </div>
+            <div class="card">
+              <p>Is It Possible to Detect When Candidates Use ChatGPT?</p>
+              <img src="icons/bulb_icon.png" alt="" />
+            </div>
+            <div class="card">
+              <p>Should Employers Test a Candidate’s Ability to Use ChatGPT?</p>
+
+              <img src="icons/message_icon.png" alt="" />
+            </div>
+            <div class="card">
+              <p>
+                What Technical Skills Will Still Be Important in an AI-Driven
+                World?
+              </p>
+              <img src="icons/code_icon.png" alt="" />
+            </div>
+          </div>
+
+          <div class="user-msg"></div>
+          <div class="gemini-msg"></div>
+          <div class="main-bottom">
+            <div class="search-box">
+              <input
+                class="inputGet"
+                type="text"
+                placeholder="Enter Prompt Here"
+              />
+              <div>
+                <img src="icons/gallery_icon.png" alt="" />
+                <img src="icons/mic_icon.png" alt="" />
+                <img class="msgSend" src="icons/send_icon.png" alt="" />
+              </div>
+            </div>
+            <p class="bottom-info">
+              Gemini may display inaccurate info, including about people, so
+              double check its responses. your privacy and gemini Apps.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+    <script type="module">
+      import { GoogleGenerativeAI } from "@google/generative-ai";
+      const API_KEY = "AIzaSyB7GdB-LZngTNAPaAPBW794lFCmZpPadaI";
+
+      // Access your API key (see "Set up your API key" above)
+      const genAI = new GoogleGenerativeAI(API_KEY);
+      document.querySelector(".msgSend").addEventListener("click", run);
+
+      async function run() {
+        document.querySelector(".cards").style.display = "none";
+        // For text-only input, use the gemini-pro model
+        // let checkIn = document.querySelector(".check");
+        // checkIn.style.display = "none";
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        let userInput = document.querySelector(".inputGet").value;
+        let userMessageDisplayDiv = document.createElement("div");
+        userMessageDisplayDiv.textContent = `Vishal: ${userInput}`;
+        document.querySelector(".user-msg").appendChild(userMessageDisplayDiv);
+
+        const prompt = userInput;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        // console.log(text);
+        // const md = window.markdownit();
+        let geminiMessagediv = document.createElement("div");
+        geminiMessagediv.className = "gemini-msg";
+        geminiMessagediv.textContent = `gemini: ${text}`;
+        const main_container = document
+          .querySelector(".main-container")
+          .appendChild(geminiMessagediv);
+          
+          geminiMessagediv.addEventListener("click", () =>
+          userMessageDisplayDiv(geminiMessagediv.textContent)
+        );
+        //  main_container.style.display = "none";
+      }
+
+     
+
+      run();
+    </script>
+  </body>
+</html>
